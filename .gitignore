@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.env
+ml/model.pkl
+ml/training_data.csv
+*.egg-info/
+.pytest_cache/
+node_modules/
+.next/
+atlas.db
+.coverage
+tsconfig.tsbuildinfo

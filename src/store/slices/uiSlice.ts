@@ -1,0 +1,1 @@
+export { useActiveCanvas } from "@/store";

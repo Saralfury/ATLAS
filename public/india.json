@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "India" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[68, 24], [70, 31], [77, 35], [88, 28], [92, 24], [88, 21], [86, 16], [80, 8], [76, 8], [74, 12], [72, 18], [68, 24]]]
+      }
+    }
+  ]
+}
