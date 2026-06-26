@@ -5,6 +5,7 @@ import { useCallback, useEffect } from "react";
 import { MetricCard } from "@/components/shared/MetricCard";
 import { useCascadeAnimation } from "@/hooks/useCascadeAnimation";
 import { formatEconomicImpact, formatTEU } from "@/lib/formatters";
+import { resetSimulationWorkspace } from "@/lib/simulationRunner";
 import { useAtlasStore } from "@/store";
 import type { PortStatus } from "@/types/simulation.types";
 
@@ -22,14 +23,15 @@ export function DamageReport() {
   }, [result, startAnimation]);
 
   if (!result) return null;
+  const sourcePort = result.state_transitions.find((item) => item.hop === 0)?.port_name ?? result.impacted_ports[0];
 
   return (
     <section className="panel-card damage-report">
       <div className="panel-heading">
         <span>CASCADE DAMAGE REPORT</span>
-        <button onClick={() => useAtlasStore.getState().setSimulationResult(null)}>NEW SIMULATION</button>
+        <button onClick={() => resetSimulationWorkspace({ clearSelection: true })}>NEW SIMULATION</button>
       </div>
-      <h2>{result.impacted_ports[0]} SHOCK</h2>
+      <h2>{sourcePort} SHOCK</h2>
       <div className="metric-grid">
         <MetricCard label="CASCADE SIZE" value={result.cascade_size} />
         <MetricCard label="STRANDED CARGO" value={result.stranded_cargo_teu} />

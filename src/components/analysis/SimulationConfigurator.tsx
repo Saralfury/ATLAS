@@ -4,9 +4,9 @@ import { useMemo, useState } from "react";
 
 import { PortListItem } from "@/components/shared/PortListItem";
 import { usePrediction } from "@/hooks/usePrediction";
-import { simulateDisruption } from "@/lib/api";
 import { PORTS, PORT_BY_ID } from "@/lib/portData";
 import { formatDelayDays, formatPercent } from "@/lib/formatters";
+import { runSimulationForPort } from "@/lib/simulationRunner";
 import { useAtlasStore } from "@/store";
 
 export function SimulationConfigurator() {
@@ -28,16 +28,7 @@ export function SimulationConfigurator() {
 
   const runSimulation = async () => {
     if (!selectedPort) return;
-    const store = useAtlasStore.getState();
-    store.setIsLoading(true);
-    store.setPortStatus(String(selectedPort.id), "analyzing");
-    try {
-      const result = await simulateDisruption(selectedPort.name, severity);
-      store.setSimulationResult(result);
-      store.incrementSimulationCount();
-    } finally {
-      store.setIsLoading(false);
-    }
+    await runSimulationForPort(String(selectedPort.id));
   };
 
   return (

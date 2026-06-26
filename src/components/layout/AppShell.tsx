@@ -9,8 +9,8 @@ import { NetworkGraph } from "@/components/graph/NetworkGraph";
 import { IndiaMap } from "@/components/map/IndiaMap";
 import { PortTooltip } from "@/components/map/PortTooltip";
 import { OnboardingOverlay } from "@/components/overlay/OnboardingOverlay";
-import { fetchHealth, simulateDisruption } from "@/lib/api";
-import { PORT_BY_ID } from "@/lib/portData";
+import { fetchHealth } from "@/lib/api";
+import { runSimulationForPort } from "@/lib/simulationRunner";
 import { useAtlasStore } from "@/store";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePortData } from "@/hooks/usePortData";
@@ -23,17 +23,7 @@ export function AppShell() {
 
   const runSelectedSimulation = useCallback(async () => {
     const store = useAtlasStore.getState();
-    const port = store.selectedPortId ? PORT_BY_ID.get(Number(store.selectedPortId)) : null;
-    if (!port) return;
-    store.setIsLoading(true);
-    store.setPortStatus(String(port.id), "analyzing");
-    try {
-      const result = await simulateDisruption(port.name, store.severity);
-      store.setSimulationResult(result);
-      store.incrementSimulationCount();
-    } finally {
-      store.setIsLoading(false);
-    }
+    if (store.selectedPortId) await runSimulationForPort(store.selectedPortId);
   }, []);
 
   useKeyboardShortcuts(runSelectedSimulation);

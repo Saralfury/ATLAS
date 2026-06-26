@@ -9,6 +9,8 @@ def test_cascade_uses_graph_copy_and_spreads_jnpt():
     assert graph.nodes[1]["current_load"] == before
     assert result["cascade_size"] >= 6
     assert result["state_transitions"][0]["hop"] == 0
+    assert result["state_transitions"][0]["port_name"] == "JNPT Mumbai"
+    assert result["impacted_ports"][0] == "JNPT Mumbai"
     assert result["node_states"]
 
 

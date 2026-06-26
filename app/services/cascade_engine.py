@@ -36,6 +36,7 @@ def run_cascade(base_graph: nx.DiGraph, port_name: str, capacity_drop: float) ->
     initial_overflow = max(0.0, current_loads[start_id] - capacity_limits[start_id])
     queue.append((start_id, initial_overflow, 0))
     impacted: set[int] = set()
+    impacted_order: List[int] = []
     transitions: List[dict] = []
     total_delay_days = 0.0
     stranded = 0.0
@@ -52,6 +53,7 @@ def run_cascade(base_graph: nx.DiGraph, port_name: str, capacity_drop: float) ->
             continue
 
         impacted.add(node_id)
+        impacted_order.append(node_id)
         stranded += overflow
         total_delay_days += overflow / max(float(graph.nodes[node_id]["capacity_teu"]) / 30.0, 1.0)
         transitions.append(
@@ -100,7 +102,7 @@ def run_cascade(base_graph: nx.DiGraph, port_name: str, capacity_drop: float) ->
     return {
         "simulation_id": None,
         "cascade_size": len(impacted),
-        "impacted_ports": [graph.nodes[n]["name"] for n in impacted],
+        "impacted_ports": [graph.nodes[n]["name"] for n in impacted_order],
         "stranded_cargo_teu": round(stranded, 2),
         "total_delay_days": round(total_delay_days, 2),
         "node_states": node_states,

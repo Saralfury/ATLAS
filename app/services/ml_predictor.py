@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Dict
 
+import pandas as pd
+
 FEATURE_NAMES = [
     "betweenness",
     "degree",
@@ -32,12 +34,13 @@ def build_features(graph, hist_scores: Dict[int, dict], port_id: int, capacity_d
 
 def predict_port(model, graph, hist_scores: Dict[int, dict], port_id: int) -> dict:
     features = build_features(graph, hist_scores, port_id)
+    feature_frame = pd.DataFrame([features], columns=FEATURE_NAMES)
     if model is None:
         raise RuntimeError("model unavailable")
     if hasattr(model, "predict_proba"):
-        probability = float(model.predict_proba([features])[0][1])
+        probability = float(model.predict_proba(feature_frame)[0][1])
     else:
-        probability = float(model.predict([features])[0])
+        probability = float(model.predict(feature_frame)[0])
     importances = getattr(model, "feature_importances_", None)
     if importances is None:
         top_features = {name: round(abs(value), 4) for name, value in zip(FEATURE_NAMES, features)}

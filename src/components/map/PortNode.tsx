@@ -35,7 +35,12 @@ export const PortNode = memo(function PortNode({
     >
       <circle r={radius + 8} fill={statusToHex(status)} opacity="0.24" className="pulse-ring" style={{ animationDuration: `${pulseDuration}s` }} />
       {selectedPortId === String(port.id) ? <circle r={radius + 8} fill="none" stroke="var(--color-accent-cyan)" strokeWidth="1.5" /> : null}
-      <motion.circle r={radius} animate={{ fill: statusToHex(status), opacity: status === "analyzing" ? 0.45 : 1 }} transition={{ duration: 0.3 }} />
+      <motion.circle
+        r={radius}
+        initial={{ fill: statusToHex(status), opacity: 1 }}
+        animate={{ fill: statusToHex(status), opacity: status === "analyzing" ? 0.45 : 1 }}
+        transition={{ duration: 0.3 }}
+      />
       <circle r="3" fill="white" />
     </g>
   );
