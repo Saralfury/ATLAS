@@ -42,7 +42,8 @@ export function usePortData() {
     return () => {
       cancelled = true;
     };
-  }, [riskData, setRiskData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setRiskData]);
 
   return { isLoading };
 }
